@@ -95,13 +95,13 @@
             transition: transform 0.1s, background-color 0.2s;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .result-card:active { transform: scale(0.97); background-color: var(--input-bg); }
 
         .label { font-size: 0.65rem; color: #999; font-weight: 800; margin-bottom: 4px; text-transform: uppercase; }
         .value { font-size: 1rem; font-weight: 700; color: var(--main); word-break: break-all; line-height: 1.3; }
 
-        /* コピー完了通知 */
         .copy-hint {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -148,12 +148,11 @@
     <p class="subtitle">Smart Naming Convention Converter.</p>
 
     <div class="input-container">
-        <input type="text" class="input-box" id="inputBox" placeholder="Enter name or phrase" oninput="convert()" spellcheck="false">
+        <input type="text" class="input-box" id="inputBox" placeholder="e.g. My Repo, マイ プロジェクト" oninput="convert()" spellcheck="false">
         <button class="clear-btn" id="clearBtn" onclick="clearInput()">clr</button>
     </div>
 
-    <div class="result-list" id="resultList">
-        </div>
+    <div class="result-list" id="resultList"></div>
 
     <div class="footer-btns">
         <a href="https://ko-fi.com/afrorakda" target="_blank" class="kofi-btn">☕️buy me a coffee</a>
@@ -193,10 +192,14 @@
     }
 
     function toWords(str) {
-        // キャメルケースの分割、記号の置換、不要な空白の除去
+        // ロジックの強化：
+        // 1. 全角スペースを半角に、ドット、カンマ、記号をスペースに変換
+        // 2. キャメルケース（aB）を分割（a B）
+        // 3. 連続する空白を1つに統合
         return str
+            .replace(/　/g, ' ') 
+            .replace(/[^a-zA-Z0-9\s]/g, ' ') 
             .replace(/([a-z])([A-Z])/g, '$1 $2')
-            .replace(/[_\-\.]/g, ' ')
             .replace(/\s+/g, ' ')
             .trim()
             .split(' ');
@@ -204,6 +207,12 @@
 
     function renderResults(input) {
         const words = toWords(input);
+        // 全角のみなど変換不能な場合のガード
+        if (words[0] === "") {
+            resultList.innerHTML = '';
+            return;
+        }
+        
         const lowerWords = words.map(w => w.toLowerCase());
 
         const cases = [
