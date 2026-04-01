@@ -148,7 +148,7 @@
     <p class="subtitle">Smart Naming Convention Converter.</p>
 
     <div class="input-container">
-        <input type="text" class="input-box" id="inputBox" placeholder="e.g. My Repo, マイ プロジェクト" oninput="convert()" spellcheck="false">
+        <input type="text" class="input-box" id="inputBox" placeholder="e.g. My Repo, Case Fix Tool" oninput="convert()" spellcheck="false">
         <button class="clear-btn" id="clearBtn" onclick="clearInput()">clr</button>
     </div>
 
@@ -193,10 +193,10 @@
 
     function toWords(str) {
         return str
-            .replace(/　/g, ' ') // 全角スペース
-            .replace(/[\-\._,~!@#$%^&*()=+[\]{}|;:'"<>\/?\\]/g, ' ') // 記号系を狙い撃ちで空白へ
-            .replace(/([a-z])([A-Z])/g, '$1 $2') // CamelCase分割
-            .replace(/\s+/g, ' ') // 連続空白統合
+            .replace(/　/g, ' ') 
+            .replace(/[\-\._,~!@#$%^&*()=+[\]{}|;:'"<>\/?\\]/g, ' ') 
+            .replace(/([a-z])([A-Z])/g, '$1 $2') 
+            .replace(/\s+/g, ' ') 
             .trim()
             .split(' ');
     }
