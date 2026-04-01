@@ -192,23 +192,18 @@
     }
 
     function toWords(str) {
-        // ロジックの強化：
-        // 1. 全角スペースを半角に、ドット、カンマ、記号をスペースに変換
-        // 2. キャメルケース（aB）を分割（a B）
-        // 3. 連続する空白を1つに統合
         return str
-            .replace(/　/g, ' ') 
-            .replace(/[^a-zA-Z0-9\s]/g, ' ') 
-            .replace(/([a-z])([A-Z])/g, '$1 $2')
-            .replace(/\s+/g, ' ')
+            .replace(/　/g, ' ') // 全角スペース
+            .replace(/[\-\._,~!@#$%^&*()=+[\]{}|;:'"<>\/?\\]/g, ' ') // 記号系を狙い撃ちで空白へ
+            .replace(/([a-z])([A-Z])/g, '$1 $2') // CamelCase分割
+            .replace(/\s+/g, ' ') // 連続空白統合
             .trim()
             .split(' ');
     }
 
     function renderResults(input) {
         const words = toWords(input);
-        // 全角のみなど変換不能な場合のガード
-        if (words[0] === "") {
+        if (words.length === 0 || words[0] === "") {
             resultList.innerHTML = '';
             return;
         }
